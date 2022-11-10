@@ -22,17 +22,20 @@ export default class PostsService {
 		})
 	}
 
-	public async updatePosts(posts: updatePostsDto) {
+	public async updatePosts(posts: updatePostsDto, user: string) {
 		const { id, checked, description, title, userId } = posts
-
-		return await this.prisma.posts.update({
-			data: {
-				checked,
-				title,
-				description,
-			},
-			where: { id },
-		})
+		if (userId === user) {
+			return await this.prisma.posts.update({
+				data: {
+					checked,
+					title,
+					description,
+				},
+				where: { id },
+			})
+		} else {
+			return 'Somente o usuário pode alterar o post'
+		}
 	}
 
 	public async deletePosts(id: string) {

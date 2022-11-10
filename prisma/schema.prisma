@@ -15,11 +15,11 @@ model Posts {
   title       String
   description String?
   checked     Boolean
+  User        User?   @relation(fields: [userId], references: [id])
+  userId      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
 
   @@map("posts")
 }
@@ -27,13 +27,12 @@ model Posts {
 model User {
   id       String  @id @unique @default(uuid())
   name     String
-  email    String
+  email    String  @unique
   password String
   posts    Posts[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  postsId   String
 
   @@map("user")
 }
