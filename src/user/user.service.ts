@@ -1,23 +1,39 @@
 import { PrismaClient } from '@prisma/client'
 import { validate } from 'class-validator'
-import { CreateUserDto, UpdateUserDto } from './user.dto'
-import UserValidation from './user.validation'
+import { sign } from 'jsonwebtoken'
+import { CreateUserDto, UpdateUserDto, UserAuth } from './user.dto'
+import userValidation from './user.validation'
 
-export default class UserService {
+class UserService {
 	private prisma = new PrismaClient()
-	private validation = new UserValidation()
 
-	public async getUser(email: string) {
-		return await this.prisma.user.findUnique({
+	public async getUser(login: UserAuth) {
+		const { email, password } = login
+
+		const user = await this.prisma.user.findUnique({
 			where: { email },
 		})
+
+		if (!user) {
+			return 'Usuário não encontrado'
+		}
+		if (password === user.password) {
+			const token = sign({ id: user.id }, process.env.TOKEN, {
+				expiresIn: '1d',
+			})
+
+			return {
+				user,
+				token,
+			}
+		}
 	}
 
 	public async create(user: CreateUserDto) {
 		const { name, email, password } = user
-		this.validation.email = email
-		this.validation.password = password
-		const error = await validate(this.validation)
+		userValidation.email = email
+		userValidation.password = password
+		const error = await validate(userValidation)
 		if (error.length === 0) {
 			return await this.prisma.user.create({
 				data: { name, email, password },
@@ -45,3 +61,5 @@ export default class UserService {
 		})
 	}
 }
+
+export default new UserService()

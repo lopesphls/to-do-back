@@ -1,9 +1,11 @@
 import { IsEmail, MinLength } from 'class-validator'
 
-export default class UserValidation {
+class UserValidation {
 	@IsEmail()
 	email: string
 
 	@MinLength(6)
 	password: string
 }
+
+export default new UserValidation()

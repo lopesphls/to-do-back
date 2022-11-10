@@ -1,11 +1,11 @@
-export interface createPostsDto {
+export interface CreatePostsDto {
 	title: string
 	description: string
 	checked: boolean
 	userId: string
 }
 
-export interface updatePostsDto {
+export interface UpdatePostsDto {
 	id: string
 	title: string
 	description: string

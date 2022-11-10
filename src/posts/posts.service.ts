@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import { createPostsDto, updatePostsDto } from './posts.dto'
+import { CreatePostsDto, UpdatePostsDto } from './posts.dto'
 
-export default class PostsService {
+class PostsService {
 	private prisma = new PrismaClient()
 
 	public async getAll() {
@@ -16,13 +16,13 @@ export default class PostsService {
 		})
 	}
 
-	public async createPosts(posts: createPostsDto) {
+	public async createPosts(posts: CreatePostsDto) {
 		return await this.prisma.posts.create({
 			data: posts,
 		})
 	}
 
-	public async updatePosts(posts: updatePostsDto, user: string) {
+	public async updatePosts(posts: UpdatePostsDto, user: string) {
 		const { id, checked, description, title, userId } = posts
 		if (userId === user) {
 			return await this.prisma.posts.update({
@@ -42,3 +42,5 @@ export default class PostsService {
 		return await this.prisma.posts.delete({ where: { id } })
 	}
 }
+
+export default new PostsService()

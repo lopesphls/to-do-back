@@ -1,12 +1,10 @@
 import { Request, Response } from 'express'
 import PostsService from './posts.service'
 
-export default class PostsController {
-	private postsService = new PostsService()
-
+class PostsController {
 	public async findAllPosts(req: Request, res: Response) {
 		try {
-			const posts = await this.postsService.getAll()
+			const posts = await PostsService.getAll()
 			return res.json(posts).status(200)
 		} catch (error) {
 			return res.json(error).status(404)
@@ -16,7 +14,7 @@ export default class PostsController {
 	public async findByIdPost(req: Request, res: Response) {
 		try {
 			const { id } = req.params
-			const posts = await this.postsService.getById(id)
+			const posts = await PostsService.getById(id)
 			return res.json(posts).status(200)
 		} catch (error) {
 			return res.json(error).status(404)
@@ -26,7 +24,7 @@ export default class PostsController {
 	public async createPost(req: Request, res: Response) {
 		try {
 			const post = req.body
-			await this.postsService.createPosts(post)
+			await PostsService.createPosts(post)
 			return res.status(201)
 		} catch (error) {
 			return res.json(error).status(404)
@@ -36,7 +34,7 @@ export default class PostsController {
 	public async updatePost(req: Request, res: Response) {
 		try {
 			const { id } = req.params
-			const posts = this.postsService.getById(id)
+			const posts = PostsService.getById(id)
 			return res.json(posts).status(200)
 		} catch (error) {
 			return res.json(error).status(404)
@@ -46,10 +44,12 @@ export default class PostsController {
 	public async deletePost(req: Request, res: Response) {
 		try {
 			const { id } = req.params
-			const posts = this.postsService.getById(id)
+			const posts = PostsService.getById(id)
 			return res.json(posts).status(200)
 		} catch (error) {
 			return res.json(error).status(404)
 		}
 	}
 }
+
+export default new PostsController()
