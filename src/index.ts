@@ -1,3 +1,4 @@
+import cors from 'cors'
 import 'dotenv/config'
 import express, { json, urlencoded } from 'express'
 import postsRouter from './posts/posts.routes'
@@ -9,6 +10,7 @@ function Server() {
 
 	app.use(json())
 	app.use(urlencoded({ extended: true }))
+	app.use(cors())
 
 	app.use('/posts', postsRouter)
 	app.use('/user', userRouter)
