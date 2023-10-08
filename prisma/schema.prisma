@@ -11,10 +11,35 @@ datasource db {
 }
 
 model User {
-  id       String @id @unique
+  id       String  @id @unique
   name     String
   password String
-  email    String @unique
+  email    String  @unique
+  Role     Role?   @relation(fields: [roleId], references: [id])
+  roleId   String?
 
   @@map("user")
+}
+
+model Category {
+  id     String  @id @unique
+  name   String
+  Role   Role?   @relation(fields: [roleId], references: [id])
+  roleId String?
+
+  @@map("category")
+}
+
+model Role {
+  id       String     @id @unique
+  name     String
+  create   Boolean
+  read     Boolean
+  update   Boolean
+  delete   Boolean
+  isAdmin  Boolean
+  user     User[]
+  category Category[]
+
+  @@map("role")
 }
